@@ -1,94 +1,172 @@
 class Order:
-    def __init__(self, order_id, customer_name,product_name,unit_price, quantity,shipping_fee,voucher):
+    def __init__(self, order_id, customer_name, product_name, unit_price, quantity, shipping_fee, voucher):
+        self.order_id = order_id
         self.customer_name = customer_name
         self.product_name = product_name
         self.unit_price = unit_price
-        self.quantity = quantity 
+        self.quantity = quantity
         self.shipping_fee = shipping_fee
         self.voucher = voucher
         self.total_amount = 0
         self.order_type = ""
+
     def calculate_total_amount(self):
-        # tổng tiền = đơn giá * số lượng + phí vận chuyển - voucher
-        total_amount = self.unit_price * self.quantity + self.shipping_fee 
+        self.total_amount = self.unit_price * self.quantity + self.shipping_fee - self.voucher
+
     def classify_order(self):
-        # nếu đơn hàng có tổng tiền từ >= 10000000 thì vip 
-        # nếu đơn hàng có tổng tiền từ >= 2000000 thì lớn 
-        # nếu đơn hàng có tổng tiền từ >= 500000 thì trung bình 
-        if self.total_amount >= 10000000 :
-            self.classify_order = "VIP"
-        elif self.total_amount >= 2000000 :
-            self.classify_order = "Lớn"
-        elif self.total_amount >= 500000 :
-            self.classify_order = "Trung bình"
-        else: 
-            self.classify_order = "Nhỏ"
-            return 
-class OrderManager: 
+        if self.total_amount >= 10000000:
+            self.order_type = "VIP"
+        elif self.total_amount >= 2000000:
+            self.order_type = "Lớn"
+        elif self.total_amount >= 500000:
+            self.order_type = "Trung bình"
+        else:
+            self.order_type = "Nhỏ"
+
+
+class OrderManager:
     def __init__(self):
         self.orders = []
-        return
-    def add_order(self, order_id, customer_name,product_name,unit_price, quantity,shipping_fee,voucher):
-        user = str(input("Cho người dùng nhập tên:")).strip()
-        self.order_id = order.id
-        self.customer_name = customer_name
-        self.product_name = product_name
-        self.unit_price = unit_price
-        self.quantity = quantity 
-        self.shipping_fee = shipping_fee
-        self.voucher = voucher
-        return 
-    print("Đã thêm thành công !")
-    def show_all(self):
-        if order == "":
-            print("Thông báo: Danh sách đơn hàng đang rỗng!") 
-        if order.id == order.id: 
-            print("Mã số đã tồn tại , quý khách vui lòng nhập lại!")
-        for order in self.orders :
-            if order.id == order.id: 
-                print(f"{"Mã đơn hàng:":<10} | {"Tên khách hàng:":<30} | {"Tên sản phẩm:":< 20} | {"Đơn giá:":< 10} | {"Số lượng":<15} | {"Phí vận chuyển:":< 15} | {"Voucher:":< 10} | {"Tổng tiền:":< 20} | {"Phân loại đơn hàng:" :< 25}")
-                continue
-            if order.id != order.id:
-                print(f"{"Mã đơn hàng:":<10} | {"Tên khách hàng:":<30} | {"Tên sản phẩm:":< 20} | {"Đơn giá:":<10} | {"Số lượng:":<15} | {"Phí vận chuyển:":<15} | {"Voucher:":< 10} | {"Tổng tiền:":< 20} | {"Phân loại đơn hàng:":< 25}")
-                return 
-            print("Thông báo hiển thị thành công !")
-    def update_order(self):
-        pass
-        print("Cập nhật đơn hàng thành công!")
-    def delete_order(self):
-        pass
-        print("Xóa thành công")
-    def search_order(self):
-        pass
-        print("Tìm kiếm thành công!")
-    def validate_order(self):
-        pass
-def main():
-    order = OrderManager()
-    print("*" *60)
-    print("            MENU              ")
-    print("1. Hiển thị danh sách đơn hàng")
-    print("2. Thêm đơn hàng mới ")
-    print("3.Cập nhật đơn hàng")
-    print("4.Xóa đơn hàng")
-    print("5. Tìm kiếm đơn hàng")
-    print("6.Thoát chương trình") 
-    print("*" * 60)
-    choice = int(input("Người dùng vui lòng nhập lựa chọn từ 1- 6:"))
-    match(choice):
-        case"1":
-            self.add_order = add_order()
-        case "2":
-            self.show_all = show_all()
-        case "3":
-            self.update_order = update_order()
-        case "4":
-            self.delete_order = delete_order()
-        case"5":
-            self.search_order = search_order()
-        case "6":
-            print("Thoát chương trình")
-        case _:
+
+    def validate_string(self, value, field):
+        if not value.strip():
+            print(f"{field} không được rỗng")
+            return False
+        return True
+
+    def validate_int(self, value, field, min_value=0, max_value=1000000000):
+        try:
+            num = int(value)
+            if num < min_value:
+                print(f"{field} không được âm hoặc nhỏ hơn {min_value}")
+                return None
+            if num > max_value:
+                print(f"{field} vượt quá giới hạn {max_value}")
+                return None
+            return num
+        except ValueError:
+            print(f"{field} phải là số nguyên")
+            return None
+
+    def check_duplicate(self, order_id):
+        for order in self.orders:
+            if order.order_id == order_id:
+                print("Mã đơn hàng đã tồn tại")
+                return True
+        return False
+
+    def add_order(self):
+        order_id = input("Mã đơn hàng: ").strip()
+        if not self.validate_string(order_id, "Mã đơn hàng"):
             return
-if __name__ == "main":
+        if self.check_duplicate(order_id):
+            return
+        customer_name = input("Tên khách hàng: ").strip()
+        if not self.validate_string(customer_name, "Tên khách hàng"):
+            return
+        product_name = input("Tên sản phẩm: ").strip()
+        if not self.validate_string(product_name, "Tên sản phẩm"):
+            return
+        unit_price = self.validate_int(input("Đơn giá: "), "Đơn giá", 1)
+        if unit_price is None:
+            return
+        quantity = self.validate_int(input("Số lượng: "), "Số lượng", 1)
+        if quantity is None:
+            return
+        shipping_fee = self.validate_int(input("Phí vận chuyển: "), "Phí vận chuyển", 0)
+        if shipping_fee is None:
+            return
+        voucher = self.validate_int(input("Voucher: "), "Voucher", 0)
+        if voucher is None:
+            return
+        order = Order(order_id, customer_name, product_name, unit_price, quantity, shipping_fee, voucher)
+        order.calculate_total_amount()
+        order.classify_order()
+        self.orders.append(order)
+        print("Đã thêm đơn hàng thành công")
+
+    def show_all(self):
+        if not self.orders:
+            print("Danh sách đơn hàng rỗng")
+            return
+        print(f"{'Mã đơn':<10} | {'Khách hàng':<20} | {'Sản phẩm':<20} | {'Đơn giá':<10} | {'SL':<5} | {'Phí VC':<10} | {'Voucher':<10} | {'Tổng tiền':<15} | {'Loại':<10}")
+        print("-" * 120)
+        for order in self.orders:
+            print(f"{order.order_id:<10} | {order.customer_name:<20} | {order.product_name:<20} | "
+                  f"{order.unit_price:<10} | {order.quantity:<5} | {order.shipping_fee:<10} | "
+                  f"{order.voucher:<10} | {order.total_amount:<15} | {order.order_type:<10}")
+
+    def update_order(self):
+        if not self.orders:
+            print("Danh sách đơn hàng rỗng")
+            return
+        order_id = input("Nhập mã đơn hàng cần cập nhật: ").strip()
+        for order in self.orders:
+            if order.order_id == order_id:
+                new_quantity = self.validate_int(input("Nhập số lượng mới: "), "Số lượng", 1)
+                if new_quantity is None:
+                    return
+                order.quantity = new_quantity
+                order.calculate_total_amount()
+                order.classify_order()
+                print("Cập nhật thành công")
+                return
+        print("Không tìm thấy đơn hàng")
+
+    def delete_order(self):
+        if not self.orders:
+            print("Danh sách đơn hàng rỗng")
+            return
+        order_id = input("Nhập mã đơn hàng cần xóa: ").strip()
+        for order in self.orders:
+            if order.order_id == order_id:
+                self.orders.remove(order)
+                print("Xóa thành công")
+                return
+        print("Không tìm thấy đơn hàng")
+
+    def search_order(self):
+        if not self.orders:
+            print("Danh sách đơn hàng rỗng")
+            return
+        order_id = input("Nhập mã đơn hàng cần tìm: ").strip()
+        for order in self.orders:
+            if order.order_id == order_id:
+                print(f"{order.order_id:<10} | {order.customer_name:<20} | {order.product_name:<20} | "
+                      f"{order.unit_price:<10} | {order.quantity:<5} | {order.shipping_fee:<10} | "
+                      f"{order.voucher:<10} | {order.total_amount:<15} | {order.order_type:<10}")
+                return
+        print("Không tìm thấy đơn hàng")
+
+
+def main():
+    manager = OrderManager()
+    while True:
+        print("\n" + "*" * 60)
+        print("1. Hiển thị danh sách đơn hàng")
+        print("2. Thêm đơn hàng mới")
+        print("3. Cập nhật đơn hàng")
+        print("4. Xóa đơn hàng")
+        print("5. Tìm kiếm đơn hàng")
+        print("6. Thoát chương trình")
+        print("*" * 60)
+        choice = input("Nhập lựa chọn (1-6): ").strip()
+        if choice == "1":
+            manager.show_all()
+        elif choice == "2":
+            manager.add_order()
+        elif choice == "3":
+            manager.update_order()
+        elif choice == "4":
+            manager.delete_order()
+        elif choice == "5":
+            manager.search_order()
+        elif choice == "6":
+            print("Thoát chương trình")
+            break
+        else:
+            print("Lựa chọn không hợp lệ")
+
+
+if __name__ == "__main__":
     main()
